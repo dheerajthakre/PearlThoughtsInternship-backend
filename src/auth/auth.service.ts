@@ -7,6 +7,7 @@ import { User, UserRole } from '../users/user.entity';
 import * as bcrypt from 'bcrypt'; // add new
 import { Doctor } from '../doctors/doctor.entity';
 import { Patient } from '../patients/patient.entity';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
@@ -24,7 +25,12 @@ export class AuthService {
     private patientRepo: Repository<Patient>,
 
     private jwtService: JwtService,
-  ) {}
+    private configService: ConfigService,
+  ) {
+    this.client = new OAuth2Client(
+      this.configService.get<string>('GOOGLE_CLIENT_ID'),
+    )
+  }
 
 
   async googleLogin(idToken: string, role: UserRole) {
